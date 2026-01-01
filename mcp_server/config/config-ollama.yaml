@@ -1,0 +1,64 @@
+# Graphiti MCP Server Configuration - Ollama + Neo4j
+# CT 110: Graphiti MCP Server
+# CT 106: Ollama (LLM + Embedding)
+# CT 109: Neo4j
+
+server:
+  transport: "http"
+  host: "0.0.0.0"
+  port: 8001  # MCP on 8001, REST API on 8000
+
+llm:
+  provider: "openai"  # Use OpenAI-compatible API for Ollama
+  model: "qwen3:14b"
+  max_tokens: 8192
+
+  providers:
+    openai:
+      api_key: "ollama"
+      api_url: "http://192.168.1.247:11434/v1"
+      organization_id: ""
+
+embedder:
+  provider: "openai"  # Use OpenAI-compatible API for Ollama
+  model: "snowflake-arctic-embed2"
+  dimensions: 1024
+
+  providers:
+    openai:
+      api_key: "ollama"
+      api_url: "http://192.168.1.247:11434/v1"
+      organization_id: ""
+
+database:
+  provider: "neo4j"
+
+  providers:
+    neo4j:
+      uri: "bolt://192.168.1.109:7687"
+      username: "neo4j"
+      password: "WeKnora2025Neo4j"
+      database: "neo4j"
+      use_parallel_runtime: false
+
+graphiti:
+  group_id: "mcp_main"
+  episode_id_prefix: "mcp_"
+  user_id: "mcp_user"
+  entity_types:
+    - name: "Server"
+      description: "Physical or virtual servers, containers, VMs"
+    - name: "Service"
+      description: "Running services, applications, daemons"
+    - name: "Configuration"
+      description: "Settings, config files, environment variables"
+    - name: "Network"
+      description: "IP addresses, ports, network connections"
+    - name: "User"
+      description: "System users, accounts, credentials"
+    - name: "Project"
+      description: "Software projects, repositories, codebases"
+    - name: "Procedure"
+      description: "Operations, commands, maintenance procedures"
+    - name: "Event"
+      description: "Deployments, updates, incidents"

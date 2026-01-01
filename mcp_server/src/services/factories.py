@@ -129,12 +129,16 @@ class LLMClientFactory:
                     'gpt-5-nano' if is_reasoning_model else 'gpt-4.1-mini'
                 )  # Use reasoning model for small tasks if main model is reasoning
 
+                # Get base_url from config (supports OpenRouter, etc.)
+                base_url = getattr(config.providers.openai, "api_url", None)
+
                 llm_config = CoreLLMConfig(
                     api_key=api_key,
                     model=config.model,
                     small_model=small_model,
                     temperature=config.temperature,
                     max_tokens=config.max_tokens,
+                    base_url=base_url,
                 )
 
                 # Only pass reasoning/verbosity parameters for reasoning models (gpt-5 family)

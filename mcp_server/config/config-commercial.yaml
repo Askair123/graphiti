@@ -1,0 +1,84 @@
+# Graphiti MCP Server Configuration - Commercial API
+# CT 110: Graphiti MCP Server
+# LLM: DeepSeek V3.2 via OpenRouter
+# Embedding: Gemini embedding-001 via Google
+# CT 109: Neo4j
+
+server:
+  transport: "http"
+  host: "0.0.0.0"
+  port: 8001  # MCP on 8001, REST API on 8000
+
+llm:
+  provider: "openai"  # OpenRouter is OpenAI-compatible
+  model: "deepseek/deepseek-v3.2"
+  max_tokens: 8192
+
+  providers:
+    openai:
+      api_key: ${OPENAI_API_KEY}
+      api_url: "https://openrouter.ai/api/v1"
+      organization_id: ""
+
+embedder:
+  provider: "gemini"
+  model: "gemini-embedding-001"
+  dimensions: 3072
+
+  providers:
+    gemini:
+      api_key: ${GOOGLE_API_KEY}
+      project_id: ""
+      location: "us-central1"
+
+database:
+  provider: "neo4j"
+
+  providers:
+    neo4j:
+      uri: "bolt://192.168.1.109:7687"
+      username: "neo4j"
+      password: ${NEO4J_PASSWORD}
+      database: "neo4j"
+      use_parallel_runtime: false
+
+graphiti:
+  group_id: "pve-management"
+  episode_id_prefix: "mcp_"
+  user_id: "claude-code"
+  entity_types:
+    # PVE 基础设施 - 使用标准命名格式
+    - name: "Container"
+      description: "LXC containers. MUST use format 'CT {id}' (e.g., CT 110, CT 109). Never use Chinese names or aliases."
+    - name: "VirtualMachine"
+      description: "Virtual machines. MUST use format 'VM {id}' (e.g., VM 102). Never use Chinese names or aliases."
+    - name: "Host"
+      description: "Physical Proxmox VE host server. Use 'PVE Host' as the entity name."
+
+    # 服务和应用
+    - name: "Service"
+      description: "Running services/applications. Use official names (Neo4j, Graphiti, Nginx, Prometheus, Grafana, Ollama)."
+    - name: "Database"
+      description: "Database systems (Neo4j, PostgreSQL, MySQL, Redis). Include type in name."
+    - name: "API"
+      description: "API endpoints and services (REST API, MCP Server, Ollama API)."
+
+    # AI/ML 相关
+    - name: "Model"
+      description: "AI/ML models with exact version (deepseek/deepseek-v3.2, gemini-embedding-001, qwen3:8b)."
+    - name: "Embedder"
+      description: "Embedding models and their dimensions (gemini-embedding-001 3072D)."
+
+    # 配置和网络
+    - name: "Configuration"
+      description: "Config files, environment variables, settings. Include file path if known."
+    - name: "Network"
+      description: "IP addresses (192.168.1.xxx), ports, domains (falmen.com). Use exact values."
+
+    # 项目和流程
+    - name: "Project"
+      description: "Software projects and repositories (pve-management, videorag, weknora)."
+    - name: "Procedure"
+      description: "Operations, maintenance procedures, troubleshooting steps."
+    - name: "Event"
+      description: "Deployments, upgrades, incidents. Include date if known (YYYY-MM-DD)."
